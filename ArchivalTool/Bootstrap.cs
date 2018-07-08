@@ -40,7 +40,7 @@ namespace ArchivalTool
                 {
                     foreach (var directory in ArchiveMetadata.ArchiveDirectory.GetDirectories())
                     {
-                        if (directory.Exists && !directory.EnumerateFiles().Any())
+                        if (directory.Exists && !directory.EnumerateFiles("*", System.IO.SearchOption.AllDirectories).Any())
                         {
                             log.Info($"Pruning Directory: {directory.FullName}");
                             directory.Delete(true);
