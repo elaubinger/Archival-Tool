@@ -1,0 +1,59 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ArchivalTool.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BaseDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">F:\WiFi Storage</Value>
+    </Setting>
+    <Setting Name="ArchiveFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Archive</Value>
+    </Setting>
+    <Setting Name="UnsortedFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Unsorted</Value>
+    </Setting>
+    <Setting Name="SortThreads" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ThreadWaitTime" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="ArchiveCycleTime" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="AllowPrompts" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DirectoryNameRegexRulesPairs" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;A|^[aA]&lt;/string&gt;
+  &lt;string&gt;B|^[bB]&lt;/string&gt;
+  &lt;string&gt;C|^[cC]&lt;/string&gt;
+  &lt;string&gt;D|^[dD]&lt;/string&gt;
+  &lt;string&gt;E|^[eE]&lt;/string&gt;
+  &lt;string&gt;F|^[fF]&lt;/string&gt;
+  &lt;string&gt;G|^[gG]&lt;/string&gt;
+  &lt;string&gt;H|^[hH]&lt;/string&gt;
+  &lt;string&gt;I|^[iI]&lt;/string&gt;
+  &lt;string&gt;J|^[jJ]&lt;/string&gt;
+  &lt;string&gt;K|^[kK]&lt;/string&gt;
+  &lt;string&gt;L|^[lL]&lt;/string&gt;
+  &lt;string&gt;M|^[mM]&lt;/string&gt;
+  &lt;string&gt;N|^[nN]&lt;/string&gt;
+  &lt;string&gt;O|^[oO]&lt;/string&gt;
+  &lt;string&gt;P|^[pP]&lt;/string&gt;
+  &lt;string&gt;Q|^[qQ]&lt;/string&gt;
+  &lt;string&gt;R|^[rR]&lt;/string&gt;
+  &lt;string&gt;S|^[sS]&lt;/string&gt;
+  &lt;string&gt;T|^[tT]&lt;/string&gt;
+  &lt;string&gt;U|^[uU]&lt;/string&gt;
+  &lt;string&gt;V|^[vV]&lt;/string&gt;
+  &lt;string&gt;W|^[wW]&lt;/string&gt;
+  &lt;string&gt;X|^[xX]&lt;/string&gt;
+  &lt;string&gt;Y|^[yY]&lt;/string&gt;
+  &lt;string&gt;Z|^[zZ]&lt;/string&gt;
+  &lt;string&gt;Numeric|^[0-9]&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
