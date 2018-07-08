@@ -43,7 +43,7 @@ namespace ArchivalTool
                         if (directory.Exists && !directory.EnumerateFiles().Any())
                         {
                             log.Info($"Pruning Directory: {directory.FullName}");
-                            directory.Delete();
+                            directory.Delete(true);
                         }
                     }
                 };
