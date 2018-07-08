@@ -933,3 +933,8 @@ System.IO.IOException: The process cannot access the file because it is being us
 	Archive Directory: F:\WiFi Storage\Archive
 	Unsorted Directory: F:\WiFi Storage\Unsorted
 
+2018-07-08 19:00:09,157 [1] INFO  ArchivalTool.ArchiveMetadata 
+	Master Directory: F:\WiFi Storage
+	Archive Directory: F:\WiFi Storage\Archive
+	Unsorted Directory: F:\WiFi Storage\Unsorted
+

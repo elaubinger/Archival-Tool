@@ -1,5 +1,3 @@
-bin
-obj
-.vs
-ArchivalTool/bin
-ArchivalTool/obj
+**/bin/Debug/
+**/obj/
+**/.vs/
