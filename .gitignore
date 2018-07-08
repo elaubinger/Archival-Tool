@@ -1,3 +1,7 @@
-bin
-obj
-.vs
+\bin
+\obj
+\.vs
+.vs/ArchivalTool/v15/.suo
+.vs/ArchivalTool/v15/Server/sqlite3/storage.ide
+.vs/ArchivalTool/v15/.suo
+ArchivalTool/bin/Debug/ArchivalTool.exe

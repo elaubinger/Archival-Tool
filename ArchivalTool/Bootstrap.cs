@@ -8,12 +8,18 @@ using System.Windows.Forms;
 
 namespace ArchivalTool
 {
+    /// <summary>
+    /// Empty form which configures and launches the tray icon, used so that any potential future forms can be more easily integrated
+    /// </summary>
     public partial class Bootstrap : Form
     {
+        #region Variable Declarations
         private readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private NotifyIcon trayIcon;
+        #endregion
 
+        #region Constructors
         public Bootstrap()
         {
             InitializeComponent();
@@ -74,5 +80,6 @@ namespace ArchivalTool
 
             archiveWorker.RunWorkerAsync();
         }
+        #endregion
     }
 }

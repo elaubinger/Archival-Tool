@@ -928,3 +928,8 @@ System.IO.IOException: The process cannot access the file because it is being us
 2018-07-08 18:04:13,467 [9] INFO  ArchivalTool.Bootstrap Pruning Directory: F:\WiFi Storage\Archive\?
 2018-07-08 18:04:13,467 [9] INFO  ArchivalTool.Bootstrap Pruning Directory: F:\WiFi Storage\Archive\?
 2018-07-08 18:04:13,467 [9] INFO  ArchivalTool.Bootstrap Pruning Directory: F:\WiFi Storage\Archive\?
+2018-07-08 18:38:21,277 [1] INFO  ArchivalTool.ArchiveMetadata 
+	Master Directory: F:\WiFi Storage
+	Archive Directory: F:\WiFi Storage\Archive
+	Unsorted Directory: F:\WiFi Storage\Unsorted
+

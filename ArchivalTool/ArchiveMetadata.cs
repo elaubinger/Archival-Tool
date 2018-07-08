@@ -9,15 +9,53 @@ using System.Windows.Forms;
 
 namespace ArchivalTool
 {
+    /// <summary>
+    /// Class containing static metadata such as directories for the archival process
+    /// </summary>
     public static class ArchiveMetadata
     {
+        #region Variable Declarations
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
+        /// <summary>
+        /// Master working directory for application
+        /// </summary>
+        public static DirectoryInfo MasterDirectory
+        {
+            get => _masterDirectory ?? throw new ArchiveConfigurationException($"{nameof(MasterDirectory)} Not Found, Ensure Archive Directories are Properly Configured and Initialized");
+            internal set => _masterDirectory = value;
+        }
 
-        public static DirectoryInfo MasterDirectory { get; internal set; }
-        public static DirectoryInfo ArchiveDirectory { get; internal set; }
-        public static DirectoryInfo UnsortedDirectory { get; internal set; }
-        public static List<Tuple<string, Regex>> SortingRules { get; internal set; }
+        /// <summary>
+        /// Directory to create archive directories within and sort files into
+        /// </summary>
+        public static DirectoryInfo ArchiveDirectory
+        {
+            get => _archiveDirectory ?? throw new ArchiveConfigurationException($"{nameof(ArchiveDirectory)} Not Found, Ensure Archive Directories are Properly Configured and Initialized");
+            internal set => _archiveDirectory = value;
+        }
 
+        /// <summary>
+        /// Directory to monitory for new files for archival
+        /// </summary>
+        public static DirectoryInfo UnsortedDirectory
+        {
+            get => _unsortedDirectory ?? throw new ArchiveConfigurationException($"{nameof(UnsortedDirectory)} Not Found, Ensure Archive Directories are Properly Configured and Initialized");
+            internal set => _unsortedDirectory = value;
+        }
+
+        private static DirectoryInfo
+            _masterDirectory,
+            _archiveDirectory,
+            _unsortedDirectory;
+
+        private static List<Tuple<string, Regex>> SortingRules { get; set; }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Initiate static metadata values for archival processes
+        /// </summary>
         public static void Initialize()
         {
             #region Initialize Major Directory Locations
@@ -81,8 +119,13 @@ namespace ArchivalTool
             }
             #endregion
         }
-
+        
         public static DirectoryInfo GetArchiveDirectory(FileInfo file) => GetArchiveDirectory(file.Name);
+        /// <summary>
+        /// Get the directory which the given file name would be sorted into using the custom regex rules
+        /// </summary>
+        /// <param name="fileName">name of file to apply sorting rules to</param>
+        /// <returns>directory where file would be sorted</returns>
         public static DirectoryInfo GetArchiveDirectory(string fileName)
         {
             Directory.SetCurrentDirectory(ArchiveDirectory.FullName);
@@ -90,7 +133,12 @@ namespace ArchivalTool
             foreach (var rule in SortingRules) if (rule.Item2.IsMatch(fileName)) return Directory.CreateDirectory($"{Path.GetFullPath(rule.Item1)}");
             return Directory.CreateDirectory($"{Path.GetFullPath("__NoMatch")}");
         }
+        #endregion
 
+        #region Exception Types
+        /// <summary>
+        /// Occurs during exceptional behavior when either an archive directory has not been initialized or fails initialization
+        /// </summary>
         private class ArchiveConfigurationException : Exception
         {
             public ArchiveConfigurationException() : base() { }
@@ -98,11 +146,15 @@ namespace ArchivalTool
             public ArchiveConfigurationException(string message, Exception innerException) : base(message, innerException) { }
         }
 
+        /// <summary>
+        /// Occurs on failure to parse the string encoding of a sorting rule (directory name|regex rule)
+        /// </summary>
         private class SortingRuleConfigurationException : Exception
         {
             public SortingRuleConfigurationException() : base() { }
             public SortingRuleConfigurationException(string message) : base(message) { }
             public SortingRuleConfigurationException(string message, Exception innerException) : base(message, innerException) { }
         }
+        #endregion
     }
 }

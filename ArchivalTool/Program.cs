@@ -17,20 +17,26 @@ namespace ArchivalTool
         [STAThread]
         static void Main()
         {
+            #region Check for Existing Running Instances
             const string appName = "Archival Tool";
             bool createdNew;
 
             var mutex = new Mutex(true, appName, out createdNew);
 
             if (!createdNew) return;
-            
+            #endregion
+
+            // Configure logging
             XmlConfigurator.Configure();
             
+            // Configure application settings
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Configure archival metadata
             ArchiveMetadata.Initialize();
 
+            // Begin running core form app
             Application.Run(new Bootstrap());
         }
     }

@@ -11,24 +11,43 @@ using System;
 
 namespace ArchivalTool
 {
+    /// <summary>
+    /// Background worker who manages the functionality of the archival process
+    /// </summary>
     public class ArchiveWorker : BackgroundWorker
     {
+        #region Public Enums
+        /// <summary>
+        /// Enum defining modes of operation for the archival process
+        /// </summary>
         public enum ArchiveWorkerMode
         {
             Continuous,
             Once
         }
+        #endregion
 
+        #region Variable Declarations
         private readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// Settable value to cancel archival after current iteration
+        /// </summary>
         public bool? CancelRequested;
+        #endregion
 
+        #region Constructors
+        /// <summary>
+        /// Master worker which dispatches subworkers to perform archival
+        /// </summary>
+        /// <param name="toSortDirectory">Directory which provides the files to be sorted</param>
+        /// <param name="mode">The mode of operating for the archival process</param>
         public ArchiveWorker(DirectoryInfo toSortDirectory, ArchiveWorkerMode mode = ArchiveWorkerMode.Continuous) : base()
         {
             DoWork += async delegate
             {
-                CancelRequested = false;
-                while (CancelRequested.HasValue && !CancelRequested.Value)
+                bool _cancelRequested = false;
+                while (!_cancelRequested)
                 {
                     var start = DateTime.Now;
 
@@ -50,8 +69,10 @@ namespace ArchivalTool
                     while (Interlocked.Read(ref counter) < Settings.Default.SortThreads) await Task.Delay(Settings.Default.ThreadWaitTime);
                     #endregion
                     
-                    if (mode == ArchiveWorkerMode.Once) CancelRequested = true;
-                    else
+                    lock(this) _cancelRequested = CancelRequested.HasValue ? CancelRequested.Value : false;
+                    if (mode == ArchiveWorkerMode.Once) _cancelRequested = true;
+                    
+                    if (!_cancelRequested)
                     {
                         #region Compute Timespan and Wait
                         var timespan = DateTime.Now - start;
@@ -62,7 +83,12 @@ namespace ArchivalTool
                 }
             };
         }
+        #endregion
         
+        #region Private Classes
+        /// <summary>
+        /// Subworker for archival process which are of a configurable number and remove files to sort from the concurrent queue until all have been processed
+        /// </summary>
         private class SortWorker : BackgroundWorker
         {
             private readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -99,5 +125,6 @@ namespace ArchivalTool
                 };
             }
         }
+        #endregion
     }
 }
