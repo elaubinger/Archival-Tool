@@ -8,6 +8,7 @@ using ArchivalTool.Properties;
 using System.Collections.Generic;
 using System.Threading;
 using System;
+using System.Linq;
 
 namespace ArchivalTool
 {
@@ -68,8 +69,19 @@ namespace ArchivalTool
                     foreach (var worker in sortWorkers) worker.RunWorkerAsync();
                     while (Interlocked.Read(ref counter) < Settings.Default.SortThreads) await Task.Delay(Settings.Default.ThreadWaitTime);
                     #endregion
-                    
-                    lock(this) _cancelRequested = CancelRequested.HasValue ? CancelRequested.Value : false;
+
+                    #region Prune Empty Directories
+                    foreach (var directory in ArchiveMetadata.ArchiveDirectory.GetDirectories())
+                    {
+                        if (directory.Exists && !directory.EnumerateFiles("*", System.IO.SearchOption.AllDirectories).Any())
+                        {
+                            log.Info($"Pruning Directory: {directory.FullName}");
+                            directory.Delete(true);
+                        }
+                    }
+                    #endregion
+
+                    lock (this) _cancelRequested = CancelRequested.HasValue ? CancelRequested.Value : false;
                     if (mode == ArchiveWorkerMode.Once) _cancelRequested = true;
                     
                     if (!_cancelRequested)
@@ -106,15 +118,28 @@ namespace ArchivalTool
                                 if (file.IsReadOnly) file.Attributes = FileAttributes.Normal;
 
                                 var folder = ArchiveMetadata.GetArchiveDirectory(file);
-                                string
-                                    newFullName = $"{folder.FullName}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(file.Name)}";
-                                if (File.Exists($"{newFullName}{file.Extension}"))
+
+                                for (int i = 0; i < Settings.Default.FileMoveAttempts; i++)
                                 {
-                                    int iterator = 0;
-                                    while (File.Exists($"{newFullName} ({iterator}){file.Extension}")) iterator++;
-                                    newFullName = $"{newFullName} ({iterator})";
+                                    try
+                                    {
+                                        string
+                                            newFullName = $"{folder.FullName}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(ArchiveMetadata.RemoveAddendums(file.Name))}";
+                                        if (File.Exists($"{newFullName}{file.Extension}"))
+                                        {
+                                            int iterator = 0;
+                                            while (File.Exists($"{newFullName} ({iterator}){file.Extension}")) iterator++;
+                                            newFullName = $"{newFullName} ({iterator})";
+                                        }
+                                        file.MoveTo($"{newFullName}{file.Extension}");
+                                    }
+                                    catch (IOException)
+                                    {
+                                        await Task.Delay(Settings.Default.ThreadWaitTime);
+                                        continue;
+                                    }
+                                    break;
                                 }
-                                file.MoveTo($"{newFullName}{file.Extension}");
                                 log.Info($"Sorted File: {file.FullName}");
                             }
                             else await Task.Delay(Settings.Default.ThreadWaitTime);

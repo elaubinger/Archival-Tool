@@ -63,9 +63,29 @@ namespace ArchivalTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap account_logout_2x {
+            get {
+                object obj = ResourceManager.GetObject("account_logout_2x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bolt_2x {
             get {
                 object obj = ResourceManager.GetObject("bolt_2x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap loop_circular_2x {
+            get {
+                object obj = ResourceManager.GetObject("loop_circular_2x", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

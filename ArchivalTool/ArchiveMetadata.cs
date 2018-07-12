@@ -133,6 +133,14 @@ namespace ArchivalTool
             foreach (var rule in SortingRules) if (rule.Item2.IsMatch(fileName)) return Directory.CreateDirectory($"{Path.GetFullPath(rule.Item1)}");
             return Directory.CreateDirectory($"{Path.GetFullPath("__NoMatch")}");
         }
+
+        public static string RemoveAddendums(string fileName)
+        {
+            var extension = Path.GetExtension(fileName);
+            var withoutExt = Path.GetFileNameWithoutExtension(fileName);
+            var result = Regex.Match(withoutExt, @"( \([0-9]?\))*$");
+            return $"{withoutExt.Substring(0, result.Groups[0].Index)}{extension}";
+        }
         #endregion
 
         #region Exception Types

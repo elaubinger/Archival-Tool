@@ -1,8 +1,6 @@
 ﻿using ArchivalTool.Properties;
 using log4net;
-using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -27,29 +25,9 @@ namespace ArchivalTool
 
             var archiveWorker = new ArchiveWorker(ArchiveMetadata.UnsortedDirectory);
 
-            MenuItem 
-                prune = new MenuItem("Prune Empty"),
-                resort = new MenuItem("Re-Sort Existing");
-
-            prune.Click += delegate
-            {
-                prune.Enabled = false;
-
-                var worker = new BackgroundWorker();
-                worker.DoWork += delegate
-                {
-                    foreach (var directory in ArchiveMetadata.ArchiveDirectory.GetDirectories())
-                    {
-                        if (directory.Exists && !directory.EnumerateFiles("*", System.IO.SearchOption.AllDirectories).Any())
-                        {
-                            log.Info($"Pruning Directory: {directory.FullName}");
-                            directory.Delete(true);
-                        }
-                    }
-                };
-                worker.RunWorkerCompleted += delegate { prune.Enabled = true; };
-                worker.RunWorkerAsync();
-            };
+            var resort = new ToolStripMenuItem(
+                "Re-Sort Existing", 
+                image: Resources.loop_circular_2x);
 
             resort.Click += delegate
             {
@@ -61,20 +39,26 @@ namespace ArchivalTool
             };
 
             // Initialize Tray Icon
-            trayIcon = new NotifyIcon
-            {
-                
-                Icon = Icon.FromHandle(Resources.bolt_2x.GetHicon()),
-                ContextMenu = new ContextMenu(new MenuItem[] {
-                    prune,
+            var contextMenu = new ContextMenuStrip();
+            contextMenu.Items.AddRange(new ToolStripItem[] {
                     resort,
-                    new MenuItem("Exit", delegate
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem(
+                        "Exit",
+                        image: Resources.account_logout_2x,
+                        onClick: delegate
                     {
                         archiveWorker.CancelRequested = true;
                         trayIcon.Visible = false;
                         Application.Exit();
                     })
-                }),
+            });
+
+            trayIcon = new NotifyIcon
+            {
+                
+                Icon = Icon.FromHandle(Resources.bolt_2x.GetHicon()),
+                ContextMenuStrip = contextMenu,
                 Visible = true
             };
 

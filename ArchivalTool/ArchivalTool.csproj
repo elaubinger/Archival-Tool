@@ -107,7 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bolt_8x_mT8_icon.ico" />
+    <Content Include="icons\account-logout-2x.png" />
     <Content Include="icons\bolt-2x.png" />
+    <Content Include="icons\loop-circular-2x.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
