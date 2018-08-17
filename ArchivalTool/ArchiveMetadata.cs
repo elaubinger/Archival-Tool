@@ -36,7 +36,7 @@ namespace ArchivalTool
         }
 
         /// <summary>
-        /// Directory to monitory for new files for archival
+        /// Directory to monitor for new files for archival
         /// </summary>
         public static DirectoryInfo UnsortedDirectory
         {
@@ -44,10 +44,32 @@ namespace ArchivalTool
             internal set => _unsortedDirectory = value;
         }
 
+        /// <summary>
+        /// Directory used to build indices
+        /// </summary>
+        public static DirectoryInfo IndexingDirectory
+        {
+            get => _indexDirectory ?? throw new ArchiveConfigurationException($"{nameof(IndexingDirectory)} Not Found, Ensure Archive Directories are Properly Configured and Initialized");
+            internal set => _indexDirectory = value;
+        }
+
+        /// <summary>
+        /// Get <see cref="IndexingDirectory"/> but return default value rather than throw error if indexing not initialized
+        /// </summary>
+        public static DirectoryInfo NullableIndexingDirectory
+        {
+            get
+            {
+                try { return IndexingDirectory; }
+                catch(Exception) { return default(DirectoryInfo); }
+            }
+        }
+
         private static DirectoryInfo
             _masterDirectory,
             _archiveDirectory,
-            _unsortedDirectory;
+            _unsortedDirectory,
+            _indexDirectory;
 
         private static List<Tuple<string, Regex>> SortingRules { get; set; }
         #endregion
@@ -66,12 +88,15 @@ namespace ArchivalTool
 
             ArchiveDirectory = Directory.CreateDirectory(Environment.ExpandEnvironmentVariables(Path.GetFullPath(Settings.Default.ArchiveFolderName)));
             UnsortedDirectory = Directory.CreateDirectory(Environment.ExpandEnvironmentVariables(Path.GetFullPath(Settings.Default.UnsortedFolderName)));
+            if(Settings.Default.UseIndexing)
+                IndexingDirectory = Directory.CreateDirectory(Environment.ExpandEnvironmentVariables(Path.GetFullPath(Settings.Default.IndexingFolderName)));
 
             log.Info(
                 $"{Environment.NewLine}" +
-                $"\tMaster Directory: {MasterDirectory.FullName}{Environment.NewLine}" +
-                $"\tArchive Directory: {ArchiveDirectory.FullName}{Environment.NewLine}" +
-                $"\tUnsorted Directory: {UnsortedDirectory.FullName}{Environment.NewLine}"
+                $"\t{nameof(MasterDirectory)}: {MasterDirectory.FullName}{Environment.NewLine}" +
+                $"\t{nameof(ArchiveDirectory)}: {ArchiveDirectory.FullName}{Environment.NewLine}" +
+                $"\t{nameof(UnsortedDirectory)}: {UnsortedDirectory.FullName}{Environment.NewLine}" +
+                $"\t{nameof(IndexingDirectory)}: {IndexingDirectory?.FullName}{Environment.NewLine}"
                 );
             #endregion
 
