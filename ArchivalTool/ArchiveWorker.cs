@@ -71,12 +71,15 @@ namespace ArchivalTool
                     #endregion
 
                     #region Prune Empty Directories
-                    foreach (var directory in ArchiveMetadata.ArchiveDirectory.GetDirectories())
+                    if (Settings.Default.PruneEmptyDirectories)
                     {
-                        if (directory.Exists && !directory.EnumerateFiles("*", System.IO.SearchOption.AllDirectories).Any())
+                        foreach (var directory in ArchiveMetadata.ArchiveDirectory.GetDirectories("*", SearchOption.AllDirectories))
                         {
-                            log.Info($"Pruning Directory: {directory.FullName}");
-                            directory.Delete(true);
+                            if (directory.Exists && !directory.EnumerateFiles("*", SearchOption.AllDirectories).Any())
+                            {
+                                log.Info($"Pruning Directory: {directory.FullName}");
+                                directory.Delete(true);
+                            }
                         }
                     }
                     #endregion
